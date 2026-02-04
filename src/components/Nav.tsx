@@ -1,4 +1,5 @@
-import { NavLink, Link, NavLinkProps } from "react-router-dom";
+import { NavLink, Link, NavLinkProps, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 import LanguageToggle from "./LanguageToggle";
 import useSiteContent from "../lib/useSiteContent";
 
@@ -6,6 +7,17 @@ const Nav = () => {
   const { content } = useSiteContent();
   const navLinkClass: NavLinkProps["className"] = ({ isActive }) =>
     isActive ? "active" : undefined;
+  const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    document.body.classList.toggle("menu-open", isOpen);
+    return () => document.body.classList.remove("menu-open");
+  }, [isOpen]);
 
   return (
     <header className="nav">
@@ -42,6 +54,62 @@ const Nav = () => {
           <NavLink to="/booking" className="button button-primary">
             {content.nav.bookSession}
           </NavLink>
+        </div>
+        <button
+          type="button"
+          className="nav-toggle"
+          aria-label={isOpen ? "Close menu" : "Open menu"}
+          aria-expanded={isOpen}
+          aria-controls="mobile-nav"
+          onClick={() => setIsOpen((prev) => !prev)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+      </div>
+      <div
+        id="mobile-nav"
+        className={`nav-panel ${isOpen ? "open" : ""}`}
+        aria-hidden={!isOpen}
+        hidden={!isOpen}
+      >
+        <div className="container nav-panel-inner">
+          <NavLink to="/about" className={navLinkClass} onClick={() => setIsOpen(false)}>
+            {content.nav.about}
+          </NavLink>
+          <NavLink to="/services" className={navLinkClass} onClick={() => setIsOpen(false)}>
+            {content.nav.services}
+          </NavLink>
+          <NavLink to="/testimonials" className={navLinkClass} onClick={() => setIsOpen(false)}>
+            {content.nav.testimonials}
+          </NavLink>
+          <NavLink to="/faq" className={navLinkClass} onClick={() => setIsOpen(false)}>
+            {content.nav.faq}
+          </NavLink>
+          <NavLink to="/booking" className={navLinkClass} onClick={() => setIsOpen(false)}>
+            {content.nav.booking}
+          </NavLink>
+          <NavLink to="/contact" className={navLinkClass} onClick={() => setIsOpen(false)}>
+            {content.nav.contact}
+          </NavLink>
+          <div className="nav-panel-cta">
+            <LanguageToggle />
+            <a
+              href="/#start-here"
+              className="button button-ghost"
+              onClick={() => setIsOpen(false)}
+            >
+              {content.nav.startHere}
+            </a>
+            <NavLink
+              to="/booking"
+              className="button button-primary"
+              onClick={() => setIsOpen(false)}
+            >
+              {content.nav.bookSession}
+            </NavLink>
+          </div>
         </div>
       </div>
     </header>
