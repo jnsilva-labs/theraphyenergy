@@ -1,7 +1,6 @@
 import { useMemo, useState, type ChangeEvent, type FormEvent } from "react";
 import SEO from "../components/SEO";
 import FadeIn from "../components/FadeIn";
-import DividerRune from "../components/DividerRune";
 import SacredGeometryMark, { GeometryVariant } from "../components/SacredGeometryMark";
 import GeometryWatermark from "../components/GeometryWatermark";
 import StaggerGroup from "../components/StaggerGroup";
@@ -90,18 +89,7 @@ const Booking = () => {
       </section>
 
       <section className="section">
-        <div className="container booking-grid">
-          <FadeIn>
-            <div className="card">
-              <h2>{booking.embedTitle}</h2>
-              <p>{booking.embedBody}</p>
-              <div className="embed-placeholder">
-                <DividerRune variant="compass" label={booking.embedTitle} />
-                <p>{booking.embedBody}</p>
-              </div>
-            </div>
-          </FadeIn>
-
+        <div className="container">
           <FadeIn>
             <div className="card">
               <h2>{booking.ritualTitle}</h2>
@@ -124,7 +112,7 @@ const Booking = () => {
       </section>
 
       <section className="section">
-        <div className="container booking-grid">
+        <div className="container">
           <FadeIn>
             <div className="card">
               <h2>{booking.formTitle}</h2>
@@ -246,17 +234,6 @@ const Booking = () => {
                   </button>
                 </form>
               )}
-            </div>
-          </FadeIn>
-
-          <FadeIn>
-            <div className="card">
-              <h2>{booking.whatNextTitle}</h2>
-              <ul className="list">
-                {booking.whatNextSteps.map((step) => (
-                  <li key={step}>{step}</li>
-                ))}
-              </ul>
               <div className="disclaimer-block">
                 <p>{content.disclaimers.general}</p>
                 <p>{content.disclaimers.emergency}</p>
