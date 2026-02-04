@@ -674,6 +674,21 @@
     align-items: center;
   }
 
+  .about-teaser-photo {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-soft);
+    background: var(--card-bg);
+  }
+
+  .about-teaser-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
   .how-it-works .card {
     text-align: center;
   }
@@ -1144,6 +1159,21 @@
   }
 }
 
+@media (max-width: 1024px) {
+  .nav-links,
+  .nav-cta {
+    display: none;
+  }
+
+  .nav-toggle {
+    display: inline-flex;
+  }
+
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 900px) {
   .nav-inner {
     flex-direction: row;
@@ -1213,14 +1243,14 @@
   }
 
   .geometry-header {
-    width: 240px;
-    height: 240px;
-    margin-bottom: -40px;
+    width: 210px;
+    height: 210px;
+    margin-bottom: -32px;
   }
 
   h1 {
-    font-size: 2.2rem;
-    letter-spacing: 0.06em;
+    font-size: 1.9rem;
+    letter-spacing: 0.04em;
   }
 
   .hero-inner {
@@ -1228,9 +1258,9 @@
   }
 
   .hero-tagline {
-    font-size: 0.85rem;
-    letter-spacing: 0.16em;
-    padding: 6px 18px;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    padding: 6px 12px;
   }
 
   .hero-ornament {
@@ -1239,21 +1269,21 @@
 
   .service-timeline-grid {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 16px;
   }
 
   .service-item {
-    max-width: 520px;
+    max-width: 420px;
     margin: 0 auto;
-    padding: 28px;
+    padding: 20px;
   }
 
   .service-item-title {
-    font-size: 1.25rem;
+    font-size: 1.05rem;
   }
 
   .service-item-desc {
-    font-size: 1rem;
+    font-size: 0.92rem;
   }
 
   .spine-line,
@@ -1273,6 +1303,13 @@
 
   .hero-actions {
     align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .hero-actions .button {
+    min-width: 140px;
   }
 
   .parallax-accent,
@@ -1310,7 +1347,7 @@
   }
 
   .service-detail-media img {
-    height: 240px;
+    height: 210px;
   }
 
   .about-grid,
@@ -1333,6 +1370,88 @@
   }
 
   .contact-card .map-placeholder {
+    display: none;
+  }
+
+  .section {
+    padding: 40px 0;
+  }
+
+  .section-header {
+    margin-bottom: 24px;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    letter-spacing: 0.03em;
+  }
+
+  h3 {
+    font-size: 1.05rem;
+  }
+
+  body {
+    font-size: 0.96rem;
+  }
+
+  .hero-subtext,
+  .section-header p,
+  .content-block p,
+  .card p,
+  .quote {
+    font-size: 0.92rem;
+  }
+
+  .button {
+    padding: 10px 16px;
+    font-size: 0.64rem;
+    letter-spacing: 0.12em;
+  }
+
+  .nav-panel-inner a {
+    font-size: 0.8rem;
+  }
+
+  .service-item-meta {
+    font-size: 0.74rem;
+  }
+
+  .service-item-actions {
+    gap: 6px;
+  }
+
+  .about-teaser-photo {
+    width: 170px;
+    height: 170px;
+    margin: 0 auto;
+    border-radius: 999px;
+    overflow: hidden;
+    border: 2px solid var(--line);
+    box-shadow: 0 10px 20px rgba(58, 38, 38, 0.12);
+  }
+
+  .about-teaser-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .footer {
+    padding: 28px 0 14px;
+  }
+
+  .footer-inner {
+    gap: 12px;
+  }
+
+  .footer-meta,
+  .footer-bottom {
+    font-size: 0.68rem;
+    line-height: 1.45;
+  }
+
+  .footer-inner > div:last-child {
     display: none;
   }
 }

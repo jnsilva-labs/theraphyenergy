@@ -16,6 +16,7 @@ import {
   SpineNode,
   TattooPath
 } from "../components/VariantGeometry";
+import aboutPhoto from "../assets/inspo/about.jpg";
 
 const Home = () => {
   const { content } = useSiteContent();
@@ -230,7 +231,9 @@ const Home = () => {
       <section className="section about-teaser">
         <div className="container about-teaser-inner">
           <FadeIn>
-            <div className="image-placeholder" aria-hidden="true"></div>
+            <div className="about-teaser-photo">
+              <img src={aboutPhoto} alt={content.practitioner.name} loading="lazy" />
+            </div>
           </FadeIn>
           <FadeIn>
             <div>
