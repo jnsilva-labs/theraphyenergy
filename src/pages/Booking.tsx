@@ -1,0 +1,272 @@
+import { useMemo, useState, type ChangeEvent, type FormEvent } from "react";
+import SEO from "../components/SEO";
+import FadeIn from "../components/FadeIn";
+import DividerRune from "../components/DividerRune";
+import SacredGeometryMark, { GeometryVariant } from "../components/SacredGeometryMark";
+import GeometryWatermark from "../components/GeometryWatermark";
+import StaggerGroup from "../components/StaggerGroup";
+import useSiteContent from "../lib/useSiteContent";
+import { buildMailtoLink, storeSubmission } from "../lib/forms";
+import { GeometryHeader } from "../components/VariantGeometry";
+
+const Booking = () => {
+  const { content } = useSiteContent();
+  const booking = content.pages.booking;
+  const formCopy = content.forms.booking;
+  const services = content.services;
+  const ritualIcons: GeometryVariant[] = ["vesica", "spiral", "compass"];
+
+  const [submitted, setSubmitted] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    timeZone: "",
+    service: services[0]?.slug ?? "",
+    goals: "",
+    experience: "",
+    availability: "",
+    consent: false
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const serviceLabel = useMemo(() => {
+    return services.find((service) => service.slug === formData.service)?.title ?? "";
+  }, [formData.service, services]);
+
+  const handleChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value, type } = event.target;
+    if (type === "checkbox") {
+      const checkbox = event.target as HTMLInputElement;
+      setFormData((prev) => ({ ...prev, [name]: checkbox.checked }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const nextErrors: Record<string, string> = {};
+
+    if (!formData.name.trim()) nextErrors.name = formCopy.errors.name;
+    if (!formData.email.trim()) nextErrors.email = formCopy.errors.email;
+    if (!formData.timeZone.trim()) nextErrors.timeZone = formCopy.errors.timeZone;
+    if (!formData.goals.trim()) nextErrors.goals = formCopy.errors.goals;
+    if (!formData.consent) nextErrors.consent = formCopy.errors.consent;
+
+    setErrors(nextErrors);
+
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
+
+    const stored = storeSubmission("booking", {
+      ...formData,
+      serviceLabel
+    });
+    if (!stored) {
+      const body = `Name: ${formData.name}\nEmail: ${formData.email}\nTime Zone: ${formData.timeZone}\nPreferred Service: ${serviceLabel}\nGoals: ${formData.goals}\nPrior Experience: ${formData.experience}\nPreferred Dates/Times: ${formData.availability}`;
+      window.location.href = buildMailtoLink(booking.formTitle, body);
+      return;
+    }
+
+    setSubmitted(true);
+  };
+
+  return (
+    <div>
+      <SEO title={content.nav.booking} path="/booking" />
+      <section className="page-hero sacred-watermark">
+        <GeometryWatermark variant="seedOfLife" size={320} opacity={0.05} />
+        <div className="container text-center">
+          <GeometryHeader />
+          <FadeIn>
+            <p className="eyebrow">{booking.heroEyebrow}</p>
+            <h1>{booking.heroTitle}</h1>
+            <p className="hero-subtext">{booking.heroSubtitle}</p>
+          </FadeIn>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container booking-grid">
+          <FadeIn>
+            <div className="card">
+              <h2>{booking.embedTitle}</h2>
+              <p>{booking.embedBody}</p>
+              <div className="embed-placeholder">
+                <DividerRune variant="compass" label={booking.embedTitle} />
+                <p>{booking.embedBody}</p>
+              </div>
+            </div>
+          </FadeIn>
+
+          <FadeIn>
+            <div className="card">
+              <h2>{booking.ritualTitle}</h2>
+              <StaggerGroup className="stack-lg">
+                {booking.ritualSteps.map((step, index) => (
+                  <div key={step} className="ritual-step">
+                    <SacredGeometryMark
+                      variant={ritualIcons[index % ritualIcons.length]}
+                      size={32}
+                      opacity={0.4}
+                    />
+                    <span className="step-number">0{index + 1}</span>
+                    <p>{step}</p>
+                  </div>
+                ))}
+              </StaggerGroup>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container booking-grid">
+          <FadeIn>
+            <div className="card">
+              <h2>{booking.formTitle}</h2>
+              {submitted ? (
+                <div className="success-message" aria-live="polite">
+                  <h3>{booking.successTitle}</h3>
+                  <p>{booking.successBody}</p>
+                </div>
+              ) : (
+                <form className="form" onSubmit={handleSubmit} noValidate>
+                  <div className="field">
+                    <label htmlFor="name">{formCopy.fields.name}</label>
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      value={formData.name}
+                      onChange={handleChange}
+                      required
+                    />
+                    {errors.name && <span className="error">{errors.name}</span>}
+                  </div>
+                  <div className="field">
+                    <label htmlFor="email">{formCopy.fields.email}</label>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      autoComplete="email"
+                      required
+                    />
+                    {errors.email && <span className="error">{errors.email}</span>}
+                  </div>
+                  <div className="field">
+                    <label htmlFor="timeZone">{formCopy.fields.timeZone}</label>
+                    <input
+                      id="timeZone"
+                      name="timeZone"
+                      type="text"
+                      placeholder={formCopy.placeholders.timeZone}
+                      value={formData.timeZone}
+                      onChange={handleChange}
+                      required
+                    />
+                    {errors.timeZone && (
+                      <span className="error">{errors.timeZone}</span>
+                    )}
+                  </div>
+                  <div className="field">
+                    <label htmlFor="service">{formCopy.fields.service}</label>
+                    <select
+                      id="service"
+                      name="service"
+                      value={formData.service}
+                      onChange={handleChange}
+                      required
+                    >
+                      {services.map((service) => (
+                        <option key={service.slug} value={service.slug}>
+                          {service.title}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="field">
+                    <label htmlFor="goals">{formCopy.fields.goals}</label>
+                    <textarea
+                      id="goals"
+                      name="goals"
+                      rows={4}
+                      placeholder={formCopy.placeholders.goals}
+                      value={formData.goals}
+                      onChange={handleChange}
+                      required
+                    />
+                    {errors.goals && <span className="error">{errors.goals}</span>}
+                  </div>
+                  <div className="field">
+                    <label htmlFor="experience">{formCopy.fields.experience}</label>
+                    <textarea
+                      id="experience"
+                      name="experience"
+                      rows={3}
+                      placeholder={formCopy.placeholders.experience}
+                      value={formData.experience}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="field">
+                    <label htmlFor="availability">{formCopy.fields.availability}</label>
+                    <textarea
+                      id="availability"
+                      name="availability"
+                      rows={2}
+                      placeholder={formCopy.placeholders.availability}
+                      value={formData.availability}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="field checkbox-field">
+                    <label>
+                      <input
+                        type="checkbox"
+                        name="consent"
+                        checked={formData.consent}
+                        onChange={handleChange}
+                        required
+                      />
+                      {formCopy.fields.consent}
+                    </label>
+                    {errors.consent && (
+                      <span className="error">{errors.consent}</span>
+                    )}
+                  </div>
+                  <button className="button button-primary" type="submit">
+                    {booking.submitLabel}
+                  </button>
+                </form>
+              )}
+            </div>
+          </FadeIn>
+
+          <FadeIn>
+            <div className="card">
+              <h2>{booking.whatNextTitle}</h2>
+              <ul className="list">
+                {booking.whatNextSteps.map((step) => (
+                  <li key={step}>{step}</li>
+                ))}
+              </ul>
+              <div className="disclaimer-block">
+                <p>{content.disclaimers.general}</p>
+                <p>{content.disclaimers.emergency}</p>
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default Booking;

@@ -1,0 +1,31 @@
+:root {
+  --paper: #f2eadd;
+  --card-bg: #f9f4ef;
+  --sand: #e6d8c6;
+  --clay: #c9ab8c;
+  --forest: #4f6b5f;
+  --charcoal: #3a2626;
+  --ink: #3a2626;
+  --ink-fade: #6b4c4c;
+  --metallic: #c7a775;
+  --accent-green: #5d876c;
+  --accent-rose: #d48c94;
+  --accent-blue: #6d8ea8;
+  --border-color: #8fbc8f;
+  --line: rgba(58, 38, 38, 0.2);
+  --line-strong: rgba(58, 38, 38, 0.35);
+  --shadow-soft: 0 10px 24px rgba(58, 38, 38, 0.12);
+  --shadow-hover: 0 14px 30px rgba(58, 38, 38, 0.18);
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+  --max-width: 1200px;
+  --font-display: "Cinzel", serif;
+  --font-serif: "Cormorant Garamond", serif;
+  --font-sans: "Cormorant Garamond", serif;
+  --line-width: 1.5px;
+}
+
+[data-theme="lux"] {
+  color-scheme: light;
+}
