@@ -16,7 +16,8 @@ const directMap: Record<string, string> = {
   "astrology-guidance": astrology
 };
 
-const images = import.meta.glob("../assets/services/*.{jpg,jpeg,png,webp}", {
+// Keep the bundle lean: prefer optimized formats and avoid pulling large source PNGs.
+const images = import.meta.glob("../assets/services/*.{jpg,jpeg,webp}", {
   eager: true,
   import: "default"
 }) as Record<string, string>;

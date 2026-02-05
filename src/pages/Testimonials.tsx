@@ -2,6 +2,7 @@ import SEO from "../components/SEO";
 import FadeIn from "../components/FadeIn";
 import TestimonialsCarousel from "../components/TestimonialsCarousel";
 import GeometryWatermark from "../components/GeometryWatermark";
+import GeometrySprinkles from "../components/GeometrySprinkles";
 import StaggerGroup from "../components/StaggerGroup";
 import { GeometryHeader } from "../components/VariantGeometry";
 import useSiteContent from "../lib/useSiteContent";
@@ -25,7 +26,27 @@ const Testimonials = () => {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section sprinkles-scope">
+        <GeometrySprinkles
+          items={[
+            {
+              variant: "rosette12",
+              size: 280,
+              opacity: 0.12,
+              position: { top: "8%", left: "-120px" },
+              mobile: { size: 190, opacity: 0.09, position: { top: "3%", left: "-140px" } }
+            },
+            {
+              variant: "torus",
+              size: 340,
+              opacity: 0.1,
+              color: "var(--metallic)",
+              position: { bottom: "-160px", right: "-180px" },
+              mobile: { size: 230, opacity: 0.08, position: { bottom: "-190px", right: "-210px" } },
+              rotate: true
+            }
+          ]}
+        />
         <div className="container">
           <StaggerGroup className="grid grid-3">
             {content.testimonials.map((testimonial) => (

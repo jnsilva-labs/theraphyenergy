@@ -3,6 +3,7 @@ import SEO from "../components/SEO";
 import FadeIn from "../components/FadeIn";
 import ServiceDetailSections from "../components/ServiceDetailSections";
 import GeometryWatermark from "../components/GeometryWatermark";
+import GeometrySprinkles from "../components/GeometrySprinkles";
 import SacredGeometryMark, { GeometryVariant } from "../components/SacredGeometryMark";
 import { GeometryHeader } from "../components/VariantGeometry";
 import StaggerGroup from "../components/StaggerGroup";
@@ -151,8 +152,21 @@ const ServiceDetail = () => {
         </div>
       </section>
 
-      <section className="section related-services sacred-watermark">
+      <section className="section related-services sacred-watermark sprinkles-scope">
         <GeometryWatermark variant="flowerOfLife" size={300} opacity={0.05} />
+        <GeometrySprinkles
+          items={[
+            {
+              variant: "merkaba",
+              size: 300,
+              opacity: 0.06,
+              color: "var(--metallic)",
+              position: { top: "-140px", left: "-160px" },
+              mobile: { size: 210, opacity: 0.05, position: { top: "-170px", left: "-200px" } },
+              rotate: true
+            }
+          ]}
+        />
         <div className="container">
           <FadeIn>
             <div className="section-header">

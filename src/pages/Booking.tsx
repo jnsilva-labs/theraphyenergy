@@ -3,6 +3,7 @@ import SEO from "../components/SEO";
 import FadeIn from "../components/FadeIn";
 import SacredGeometryMark, { GeometryVariant } from "../components/SacredGeometryMark";
 import GeometryWatermark from "../components/GeometryWatermark";
+import GeometrySprinkles from "../components/GeometrySprinkles";
 import StaggerGroup from "../components/StaggerGroup";
 import useSiteContent from "../lib/useSiteContent";
 import { buildMailtoLink, storeSubmission } from "../lib/forms";
@@ -88,7 +89,18 @@ const Booking = () => {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section sprinkles-scope">
+        <GeometrySprinkles
+          items={[
+            {
+              variant: "lemniscate",
+              size: 260,
+              opacity: 0.1,
+              position: { top: "-90px", left: "-140px" },
+              mobile: { size: 180, opacity: 0.08, position: { top: "-110px", left: "-160px" } }
+            }
+          ]}
+        />
         <div className="container">
           <FadeIn>
             <div className="card">
@@ -111,7 +123,20 @@ const Booking = () => {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section sprinkles-scope">
+        <GeometrySprinkles
+          items={[
+            {
+              variant: "fruitOfLife",
+              size: 360,
+              opacity: 0.09,
+              color: "var(--metallic)",
+              position: { bottom: "-220px", right: "-200px" },
+              mobile: { size: 240, opacity: 0.07, position: { bottom: "-240px", right: "-240px" } },
+              rotate: true
+            }
+          ]}
+        />
         <div className="container">
           <FadeIn>
             <div className="card">
@@ -235,8 +260,10 @@ const Booking = () => {
                 </form>
               )}
               <div className="disclaimer-block">
-                <p>{content.disclaimers.general}</p>
-                <p>{content.disclaimers.emergency}</p>
+                <p>
+                  Sessions are supportive and exploratory in nature and are not a
+                  substitute for medical, psychiatric, or emergency care.
+                </p>
               </div>
             </div>
           </FadeIn>

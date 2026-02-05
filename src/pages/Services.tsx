@@ -3,6 +3,7 @@ import SEO from "../components/SEO";
 import FadeIn from "../components/FadeIn";
 import ServiceCard from "../components/ServiceCard";
 import GeometryWatermark from "../components/GeometryWatermark";
+import GeometrySprinkles from "../components/GeometrySprinkles";
 import StaggerGroup from "../components/StaggerGroup";
 import { GeometryHeader } from "../components/VariantGeometry";
 import useSiteContent from "../lib/useSiteContent";
@@ -45,7 +46,27 @@ const Services = () => {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section sprinkles-scope">
+        <GeometrySprinkles
+          items={[
+            {
+              variant: "eggOfLife",
+              size: 300,
+              opacity: 0.1,
+              position: { top: "6%", left: "-140px" },
+              mobile: { size: 200, opacity: 0.08, position: { top: "3%", left: "-170px" } }
+            },
+            {
+              variant: "cube",
+              size: 260,
+              opacity: 0.08,
+              color: "var(--metallic)",
+              position: { bottom: "-130px", right: "-120px" },
+              mobile: { size: 180, opacity: 0.06, position: { bottom: "-150px", right: "-160px" } },
+              rotate: true
+            }
+          ]}
+        />
         <div className="container">
           <FadeIn>
             <div className="filters">

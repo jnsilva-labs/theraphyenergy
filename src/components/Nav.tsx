@@ -1,6 +1,7 @@
 import { NavLink, Link, NavLinkProps, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import LanguageToggle from "./LanguageToggle";
+import SacredGeometryMark from "./SacredGeometryMark";
 import useSiteContent from "../lib/useSiteContent";
 
 const Nav = () => {
@@ -62,10 +63,14 @@ const Nav = () => {
           aria-expanded={isOpen}
           aria-controls="mobile-nav"
           onClick={() => setIsOpen((prev) => !prev)}
+          data-open={isOpen ? "true" : "false"}
         >
-          <span />
-          <span />
-          <span />
+          <SacredGeometryMark
+            variant="flowerOfLife"
+            size={30}
+            opacity={0.9}
+            className={isOpen ? "geometry-rotate" : ""}
+          />
         </button>
       </div>
       <div
