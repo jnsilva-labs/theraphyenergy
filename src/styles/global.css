@@ -96,13 +96,20 @@
     position: fixed;
     inset: 0;
     pointer-events: none;
+    z-index: 0;
+  }
+
+  .alchemy-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
     background-image:
       radial-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px),
       radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
     background-size: 120px 120px, 220px 220px;
     background-position: 20% 40%, 70% 10%;
     opacity: 0.25;
-    z-index: 0;
   }
 
   .alchemy-overlay::after {
@@ -1589,7 +1596,16 @@
   }
 
   .alchemy-overlay {
-    display: none;
+    position: absolute;
+    display: block;
+  }
+
+  .alchemy-overlay::before {
+    opacity: 0.18;
+  }
+
+  .alchemy-overlay::after {
+    background-size: 320px auto;
   }
 
   .container {
