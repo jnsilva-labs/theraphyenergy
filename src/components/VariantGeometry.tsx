@@ -92,7 +92,7 @@ export const GeometryHeader = () => {
   const shouldReduceMotion = useReducedMotion();
   return (
     <div
-      className="w-[280px] h-[280px] mx-auto -mb-[60px] relative z-[1]"
+      className="geometry-header w-[280px] h-[280px] mx-auto -mb-[60px] relative z-[1]"
       style={{
         background: "radial-gradient(circle, var(--card-bg) 40%, transparent 70%)",
         borderRadius: "50%",

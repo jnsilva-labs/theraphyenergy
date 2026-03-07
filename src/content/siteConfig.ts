@@ -286,7 +286,7 @@ export const siteConfig: {
     baseUrl: "https://www.theraphyenergy.com",
     ogImage: "/og-image.jpg",
     contact: {
-      email: "hello@intuitiveherbalist.com",
+      email: "info@theraphyenergy.com",
       instagram: "https://instagram.com/yourhandle"
     },
     instagramHandle: "@yourhandle"

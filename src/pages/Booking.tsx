@@ -1,22 +1,28 @@
 import { useMemo, useState, type ChangeEvent, type FormEvent } from "react";
 import SEO from "../components/SEO";
 import FadeIn from "../components/FadeIn";
-import DividerRune from "../components/DividerRune";
 import SacredGeometryMark, { GeometryVariant } from "../components/SacredGeometryMark";
 import GeometryWatermark from "../components/GeometryWatermark";
+import GeometrySprinkles from "../components/GeometrySprinkles";
 import StaggerGroup from "../components/StaggerGroup";
 import useSiteContent from "../lib/useSiteContent";
-import { buildMailtoLink, storeSubmission } from "../lib/forms";
+import { isValidEmail, submitForm } from "../lib/forms";
 import { GeometryHeader } from "../components/VariantGeometry";
 
 const Booking = () => {
-  const { content } = useSiteContent();
+  const { content, locale } = useSiteContent();
   const booking = content.pages.booking;
   const formCopy = content.forms.booking;
   const services = content.services;
   const ritualIcons: GeometryVariant[] = ["vesica", "spiral", "compass"];
+  const submitErrorMessage =
+    locale === "es"
+      ? "No pudimos enviar tu solicitud ahora mismo. Inténtalo de nuevo en unos minutos."
+      : "We couldn't send your request right now. Please try again in a few minutes.";
 
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -45,12 +51,12 @@ const Booking = () => {
     }
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const nextErrors: Record<string, string> = {};
 
     if (!formData.name.trim()) nextErrors.name = formCopy.errors.name;
-    if (!formData.email.trim()) nextErrors.email = formCopy.errors.email;
+    if (!isValidEmail(formData.email)) nextErrors.email = formCopy.errors.email;
     if (!formData.timeZone.trim()) nextErrors.timeZone = formCopy.errors.timeZone;
     if (!formData.goals.trim()) nextErrors.goals = formCopy.errors.goals;
     if (!formData.consent) nextErrors.consent = formCopy.errors.consent;
@@ -61,17 +67,29 @@ const Booking = () => {
       return;
     }
 
-    const stored = storeSubmission("booking", {
-      ...formData,
-      serviceLabel
-    });
-    if (!stored) {
-      const body = `Name: ${formData.name}\nEmail: ${formData.email}\nTime Zone: ${formData.timeZone}\nPreferred Service: ${serviceLabel}\nGoals: ${formData.goals}\nPrior Experience: ${formData.experience}\nPreferred Dates/Times: ${formData.availability}`;
-      window.location.href = buildMailtoLink(booking.formTitle, body);
-      return;
-    }
+    setIsSubmitting(true);
+    setSubmitError("");
 
-    setSubmitted(true);
+    try {
+      await submitForm({
+        formType: "booking",
+        locale,
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        timeZone: formData.timeZone.trim(),
+        service: serviceLabel || formData.service,
+        goals: formData.goals.trim(),
+        experience: formData.experience.trim(),
+        availability: formData.availability.trim()
+      });
+      setSubmitted(true);
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error && error.message ? error.message : submitErrorMessage
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -89,19 +107,19 @@ const Booking = () => {
         </div>
       </section>
 
-      <section className="section">
-        <div className="container booking-grid">
-          <FadeIn>
-            <div className="card">
-              <h2>{booking.embedTitle}</h2>
-              <p>{booking.embedBody}</p>
-              <div className="embed-placeholder">
-                <DividerRune variant="compass" label={booking.embedTitle} />
-                <p>{booking.embedBody}</p>
-              </div>
-            </div>
-          </FadeIn>
-
+      <section className="section sprinkles-scope">
+        <GeometrySprinkles
+          items={[
+            {
+              variant: "lemniscate",
+              size: 260,
+              opacity: 0.1,
+              position: { top: "-90px", left: "-140px" },
+              mobile: { size: 180, opacity: 0.08, position: { top: "-110px", left: "-160px" } }
+            }
+          ]}
+        />
+        <div className="container">
           <FadeIn>
             <div className="card">
               <h2>{booking.ritualTitle}</h2>
@@ -123,8 +141,21 @@ const Booking = () => {
         </div>
       </section>
 
-      <section className="section">
-        <div className="container booking-grid">
+      <section className="section sprinkles-scope">
+        <GeometrySprinkles
+          items={[
+            {
+              variant: "fruitOfLife",
+              size: 360,
+              opacity: 0.09,
+              color: "var(--metallic)",
+              position: { bottom: "-220px", right: "-200px" },
+              mobile: { size: 240, opacity: 0.07, position: { bottom: "-240px", right: "-240px" } },
+              rotate: true
+            }
+          ]}
+        />
+        <div className="container">
           <FadeIn>
             <div className="card">
               <h2>{booking.formTitle}</h2>
@@ -241,25 +272,25 @@ const Booking = () => {
                       <span className="error">{errors.consent}</span>
                     )}
                   </div>
-                  <button className="button button-primary" type="submit">
-                    {booking.submitLabel}
+                  {submitError && <p className="error">{submitError}</p>}
+                  <button
+                    className="button button-primary"
+                    type="submit"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting
+                      ? locale === "es"
+                        ? "Enviando..."
+                        : "Sending..."
+                      : booking.submitLabel}
                   </button>
                 </form>
               )}
-            </div>
-          </FadeIn>
-
-          <FadeIn>
-            <div className="card">
-              <h2>{booking.whatNextTitle}</h2>
-              <ul className="list">
-                {booking.whatNextSteps.map((step) => (
-                  <li key={step}>{step}</li>
-                ))}
-              </ul>
               <div className="disclaimer-block">
-                <p>{content.disclaimers.general}</p>
-                <p>{content.disclaimers.emergency}</p>
+                <p>
+                  Sessions are supportive and exploratory in nature and are not a
+                  substitute for medical, psychiatric, or emergency care.
+                </p>
               </div>
             </div>
           </FadeIn>
