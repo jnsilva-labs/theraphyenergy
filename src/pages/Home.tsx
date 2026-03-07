@@ -1,3 +1,4 @@
+import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import SEO from "../components/SEO";
 import FadeIn from "../components/FadeIn";
@@ -9,6 +10,7 @@ import SacredGeometryMark from "../components/SacredGeometryMark";
 import GeometryWatermark from "../components/GeometryWatermark";
 import StaggerGroup from "../components/StaggerGroup";
 import useSiteContent from "../lib/useSiteContent";
+import { isValidEmail, submitForm } from "../lib/forms";
 import {
   FloatingAccent,
   FooterGeometry,
@@ -19,7 +21,7 @@ import {
 import aboutPhoto from "../assets/inspo/about.jpg";
 
 const Home = () => {
-  const { content } = useSiteContent();
+  const { content, locale } = useSiteContent();
   const home = content.pages.home;
   const faqTeaser = content.faqs.slice(0, 4);
   const servicePalette = [
@@ -27,6 +29,46 @@ const Home = () => {
     { bg: "#f0f4f2", border: "var(--accent-green)" },
     { bg: "#eff3f7", border: "var(--accent-blue)" }
   ];
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [newsletterSubmitted, setNewsletterSubmitted] = useState(false);
+  const [newsletterError, setNewsletterError] = useState("");
+  const [newsletterSubmitting, setNewsletterSubmitting] = useState(false);
+
+  const handleNewsletterSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!isValidEmail(newsletterEmail)) {
+      setNewsletterError(
+        locale === "es"
+          ? "Por favor ingresa un correo válido."
+          : "Please enter a valid email address."
+      );
+      return;
+    }
+
+    setNewsletterSubmitting(true);
+    setNewsletterError("");
+
+    try {
+      await submitForm({
+        formType: "newsletter",
+        locale,
+        email: newsletterEmail.trim()
+      });
+      setNewsletterSubmitted(true);
+      setNewsletterEmail("");
+    } catch (error) {
+      setNewsletterError(
+        error instanceof Error && error.message
+          ? error.message
+          : locale === "es"
+            ? "No pudimos enviar tu registro ahora mismo. Inténtalo de nuevo en unos minutos."
+            : "We couldn't submit your signup right now. Please try again in a few minutes."
+      );
+    } finally {
+      setNewsletterSubmitting(false);
+    }
+  };
 
   return (
     <div>
@@ -275,19 +317,42 @@ const Home = () => {
             </div>
           </FadeIn>
           <FadeIn>
-            <form className="newsletter" onSubmit={(event) => event.preventDefault()}>
+            <form className="newsletter" onSubmit={handleNewsletterSubmit} noValidate>
               <label htmlFor="newsletter-email">{home.finalCta.formLabel}</label>
-              <div className="newsletter-field">
-                <input
-                  id="newsletter-email"
-                  type="email"
-                  placeholder={home.finalCta.formPlaceholder}
-                  autoComplete="email"
-                />
-                <button className="button button-primary" type="submit">
-                  {home.finalCta.button}
-                </button>
-              </div>
+              {newsletterSubmitted ? (
+                <div className="success-message" aria-live="polite">
+                  <h3>{locale === "es" ? "Gracias." : "Thank you."}</h3>
+                  <p>
+                    {locale === "es"
+                      ? "Tu registro fue enviado. Te escribiremos cuando haya novedades."
+                      : "Your signup was sent. We’ll reach out when there are updates."}
+                  </p>
+                </div>
+              ) : (
+                <div className="newsletter-field">
+                  <input
+                    id="newsletter-email"
+                    name="email"
+                    type="email"
+                    placeholder={home.finalCta.formPlaceholder}
+                    autoComplete="email"
+                    value={newsletterEmail}
+                    onChange={(event) => setNewsletterEmail(event.target.value)}
+                  />
+                  <button
+                    className="button button-primary"
+                    type="submit"
+                    disabled={newsletterSubmitting}
+                  >
+                    {newsletterSubmitting
+                      ? locale === "es"
+                        ? "Enviando..."
+                        : "Sending..."
+                      : home.finalCta.button}
+                  </button>
+                </div>
+              )}
+              {newsletterError && <p className="error">{newsletterError}</p>}
               <p className="fine-print">{home.finalCta.finePrint}</p>
             </form>
           </FadeIn>

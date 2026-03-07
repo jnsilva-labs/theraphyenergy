@@ -5,17 +5,23 @@ import GeometryWatermark from "../components/GeometryWatermark";
 import SacredGeometryMark from "../components/SacredGeometryMark";
 import ParallaxAccent from "../components/ParallaxAccent";
 import useSiteContent from "../lib/useSiteContent";
-import { buildMailtoLink, storeSubmission } from "../lib/forms";
+import { isValidEmail, submitForm } from "../lib/forms";
 import floralCanopy from "../assets/inspo/floralcanopy.jpg";
 import wildflowers from "../assets/inspo/wildflowers.jpg";
 import { GeometryHeader } from "../components/VariantGeometry";
 
 const Contact = () => {
-  const { content, shared } = useSiteContent();
+  const { content, locale, shared } = useSiteContent();
   const page = content.pages.contact;
   const formCopy = content.forms.contact;
+  const submitErrorMessage =
+    locale === "es"
+      ? "No pudimos enviar tu mensaje ahora mismo. Inténtalo de nuevo en unos minutos."
+      : "We couldn't send your message right now. Please try again in a few minutes.";
 
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -30,11 +36,11 @@ const Contact = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const nextErrors: Record<string, string> = {};
     if (!formData.name.trim()) nextErrors.name = formCopy.errors.name;
-    if (!formData.email.trim()) nextErrors.email = formCopy.errors.email;
+    if (!isValidEmail(formData.email)) nextErrors.email = formCopy.errors.email;
     if (!formData.message.trim()) nextErrors.message = formCopy.errors.message;
 
     setErrors(nextErrors);
@@ -42,14 +48,25 @@ const Contact = () => {
       return;
     }
 
-    const stored = storeSubmission("contact", formData);
-    if (!stored) {
-      const body = `Name: ${formData.name}\nEmail: ${formData.email}\nMessage: ${formData.message}`;
-      window.location.href = buildMailtoLink(page.formTitle, body);
-      return;
-    }
+    setIsSubmitting(true);
+    setSubmitError("");
 
-    setSubmitted(true);
+    try {
+      await submitForm({
+        formType: "contact",
+        locale,
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        message: formData.message.trim()
+      });
+      setSubmitted(true);
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error && error.message ? error.message : submitErrorMessage
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -133,8 +150,17 @@ const Contact = () => {
                       <span className="error">{errors.message}</span>
                     )}
                   </div>
-                  <button className="button button-primary" type="submit">
-                    {formCopy.submitLabel}
+                  {submitError && <p className="error">{submitError}</p>}
+                  <button
+                    className="button button-primary"
+                    type="submit"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting
+                      ? locale === "es"
+                        ? "Enviando..."
+                        : "Sending..."
+                      : formCopy.submitLabel}
                   </button>
                 </form>
               )}
