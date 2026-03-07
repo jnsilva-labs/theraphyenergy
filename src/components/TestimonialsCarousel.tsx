@@ -1,11 +1,17 @@
+import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import useSiteContent from "../lib/useSiteContent";
 
 const TestimonialsCarousel = () => {
   const { content } = useSiteContent();
   const shouldReduceMotion = useReducedMotion();
+  const [hasMounted, setHasMounted] = useState(false);
 
-  if (shouldReduceMotion) {
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  if (!hasMounted || shouldReduceMotion) {
     return (
       <div className="carousel" role="list">
         {content.testimonials.map((testimonial) => (

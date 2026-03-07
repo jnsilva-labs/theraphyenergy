@@ -7,10 +7,11 @@ import GeometrySprinkles from "../components/GeometrySprinkles";
 import StaggerGroup from "../components/StaggerGroup";
 import useSiteContent from "../lib/useSiteContent";
 import { isValidEmail, submitForm } from "../lib/forms";
+import { buildProfessionalServiceSchema } from "../lib/seo";
 import { GeometryHeader } from "../components/VariantGeometry";
 
 const Booking = () => {
-  const { content, locale } = useSiteContent();
+  const { content, locale, shared } = useSiteContent();
   const booking = content.pages.booking;
   const formCopy = content.forms.booking;
   const services = content.services;
@@ -94,7 +95,16 @@ const Booking = () => {
 
   return (
     <div>
-      <SEO title={content.nav.booking} path="/booking" />
+      <SEO
+        title="Book a Tarot or Spiritual Healing Session in Miami"
+        description="Request a tarot reading, spiritual healing, or astrology guidance session with Adriana Monsalve in Miami or remote worldwide."
+        path="/booking"
+        schema={buildProfessionalServiceSchema({
+          baseUrl: shared.baseUrl,
+          contact: shared.contact,
+          content
+        })}
+      />
       <section className="page-hero sacred-watermark">
         <GeometryWatermark variant="seedOfLife" size={320} opacity={0.05} />
         <div className="container text-center">

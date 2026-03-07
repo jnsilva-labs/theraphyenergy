@@ -7,9 +7,10 @@ import GeometrySprinkles from "../components/GeometrySprinkles";
 import StaggerGroup from "../components/StaggerGroup";
 import { GeometryHeader } from "../components/VariantGeometry";
 import useSiteContent from "../lib/useSiteContent";
+import { buildProfessionalServiceSchema } from "../lib/seo";
 
 const Services = () => {
-  const { content } = useSiteContent();
+  const { content, shared } = useSiteContent();
   const [activeTag, setActiveTag] = useState<string>(content.labels.all);
 
   useEffect(() => {
@@ -33,7 +34,16 @@ const Services = () => {
 
   return (
     <div>
-      <SEO title={content.nav.services} path="/services" />
+      <SEO
+        title="Tarot, Spiritual Healing & Astrology Services in Miami"
+        description="Explore tarot readings, spiritual healing sessions, astrology guidance, and supportive healing services in Miami with remote options worldwide."
+        path="/services"
+        schema={buildProfessionalServiceSchema({
+          baseUrl: shared.baseUrl,
+          contact: shared.contact,
+          content
+        })}
+      />
       <section className="page-hero sacred-watermark">
         <GeometryWatermark variant="seedOfLife" size={320} opacity={0.05} />
         <div className="container text-center">

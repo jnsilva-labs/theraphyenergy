@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
 type StaggerGroupProps = PropsWithChildren<{
@@ -8,8 +8,13 @@ type StaggerGroupProps = PropsWithChildren<{
 
 const StaggerGroup = ({ children, className, stagger = 0.12 }: StaggerGroupProps) => {
   const shouldReduceMotion = useReducedMotion();
+  const [hasMounted, setHasMounted] = useState(false);
 
-  if (shouldReduceMotion) {
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  if (!hasMounted || shouldReduceMotion) {
     return <div className={className}>{children}</div>;
   }
 

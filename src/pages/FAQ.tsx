@@ -7,14 +7,27 @@ import DividerRune from "../components/DividerRune";
 import StaggerGroup from "../components/StaggerGroup";
 import { GeometryHeader } from "../components/VariantGeometry";
 import useSiteContent from "../lib/useSiteContent";
+import { buildFaqSchema, buildProfessionalServiceSchema } from "../lib/seo";
 
 const FAQ = () => {
-  const { content } = useSiteContent();
+  const { content, shared } = useSiteContent();
   const page = content.pages.faq;
 
   return (
     <div>
-      <SEO title={content.nav.faq} path="/faq" />
+      <SEO
+        title="FAQ for Tarot Readings and Spiritual Healing in Miami"
+        description="Find answers about tarot readings, spiritual healing sessions, booking, policies, and remote appointments with Adriana Monsalve."
+        path="/faq"
+        schema={[
+          buildProfessionalServiceSchema({
+            baseUrl: shared.baseUrl,
+            contact: shared.contact,
+            content
+          }),
+          buildFaqSchema(content.faqs)
+        ]}
+      />
       <section className="page-hero sacred-watermark">
         <GeometryWatermark variant="seedOfLife" size={320} opacity={0.05} />
         <div className="container text-center">

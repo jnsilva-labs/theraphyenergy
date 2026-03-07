@@ -6,6 +6,7 @@ import SacredGeometryMark from "../components/SacredGeometryMark";
 import ParallaxAccent from "../components/ParallaxAccent";
 import useSiteContent from "../lib/useSiteContent";
 import { isValidEmail, submitForm } from "../lib/forms";
+import { buildProfessionalServiceSchema } from "../lib/seo";
 import floralCanopy from "../assets/inspo/floralcanopy.jpg";
 import wildflowers from "../assets/inspo/wildflowers.jpg";
 import { GeometryHeader } from "../components/VariantGeometry";
@@ -71,7 +72,16 @@ const Contact = () => {
 
   return (
     <div>
-      <SEO title={content.nav.contact} path="/contact" />
+      <SEO
+        title="Contact Adriana Monsalve"
+        description="Get in touch for tarot readings, spiritual healing, and astrology guidance in Miami or remote worldwide."
+        path="/contact"
+        schema={buildProfessionalServiceSchema({
+          baseUrl: shared.baseUrl,
+          contact: shared.contact,
+          content
+        })}
+      />
       <section className="page-hero sacred-watermark">
         <GeometryWatermark variant="flowerOfLife" size={320} opacity={0.05} />
         <ParallaxAccent className="parallax-accent" style={{ top: "15%", right: "8%" }}>

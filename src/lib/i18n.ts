@@ -1,8 +1,9 @@
-import i18n from "i18next";
+import { createInstance } from "i18next";
 import { initReactI18next } from "react-i18next";
-import { getInitialLocale, normalizeLocale, persistLocale } from "./locale";
+import type { Locale } from "../content/siteConfig";
+import { getStoredLocale, normalizeLocale, persistLocale } from "./locale";
 
-const resources = {
+export const resources = {
   en: {
     translation: {
       "language.switchTo": "Switch to Spanish",
@@ -19,17 +20,43 @@ const resources = {
   }
 } as const;
 
-const initialLocale = getInitialLocale();
+const detectInitialLocale = (): Locale => {
+  if (typeof document !== "undefined") {
+    const htmlLang = document.documentElement.lang;
+    if (htmlLang) {
+      return normalizeLocale(htmlLang);
+    }
+  }
 
-i18n.use(initReactI18next).init({
-  resources,
-  lng: initialLocale,
-  fallbackLng: "en",
-  interpolation: { escapeValue: false }
-});
+  const stored = getStoredLocale();
+  if (stored) return stored;
 
-i18n.on("languageChanged", (language) => {
-  persistLocale(normalizeLocale(language));
-});
+  if (typeof window !== "undefined") {
+    return normalizeLocale(window.navigator.language);
+  }
+
+  return "en";
+};
+
+export const createAppI18n = (locale: Locale = detectInitialLocale()) => {
+  const i18n = createInstance();
+
+  i18n.use(initReactI18next).init({
+    resources,
+    lng: locale,
+    fallbackLng: "en",
+    interpolation: { escapeValue: false }
+  });
+
+  if (typeof window !== "undefined") {
+    i18n.on("languageChanged", (language) => {
+      persistLocale(normalizeLocale(language));
+    });
+  }
+
+  return i18n;
+};
+
+const i18n = createAppI18n();
 
 export default i18n;

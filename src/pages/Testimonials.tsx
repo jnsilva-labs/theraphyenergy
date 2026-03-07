@@ -6,14 +6,24 @@ import GeometrySprinkles from "../components/GeometrySprinkles";
 import StaggerGroup from "../components/StaggerGroup";
 import { GeometryHeader } from "../components/VariantGeometry";
 import useSiteContent from "../lib/useSiteContent";
+import { buildProfessionalServiceSchema } from "../lib/seo";
 
 const Testimonials = () => {
-  const { content } = useSiteContent();
+  const { content, shared } = useSiteContent();
   const page = content.pages.testimonials;
 
   return (
     <div>
-      <SEO title={content.nav.testimonials} path="/testimonials" />
+      <SEO
+        title="Client Testimonials for Tarot and Spiritual Healing in Miami"
+        description="Read client reflections on tarot readings, healing sessions, and spiritual support with Adriana Monsalve in Miami and remotely."
+        path="/testimonials"
+        schema={buildProfessionalServiceSchema({
+          baseUrl: shared.baseUrl,
+          contact: shared.contact,
+          content
+        })}
+      />
       <section className="page-hero sacred-watermark">
         <GeometryWatermark variant="flowerOfLife" size={320} opacity={0.05} />
         <div className="container text-center">

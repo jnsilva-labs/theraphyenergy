@@ -9,6 +9,7 @@ import { GeometryHeader } from "../components/VariantGeometry";
 import StaggerGroup from "../components/StaggerGroup";
 import useSiteContent from "../lib/useSiteContent";
 import { getServiceImage } from "../lib/serviceImages";
+import { buildBreadcrumbSchema, buildServiceSchema } from "../lib/seo";
 
 const motifMap: Record<
   string,
@@ -53,17 +54,42 @@ const motifMap: Record<
 
 const ServiceDetail = () => {
   const { slug } = useParams();
-  const { content } = useSiteContent();
+  const { content, shared } = useSiteContent();
   const service = slug
     ? content.services.find((item) => item.slug === slug)
     : undefined;
   const detailLabels = content.pages.serviceDetail;
   const serviceImage = service ? getServiceImage(service.slug) : undefined;
+  const seoTitles: Record<string, string> = {
+    "tarot-readings": "Tarot Readings in Miami",
+    "quantum-healing-sessions": "Spiritual Healing Sessions in Miami",
+    "tat-therapy": "TAT Therapy Sessions in Miami",
+    "crystal-healing": "Crystal Healing in Miami",
+    "plant-medicine-sessions": "Plant Medicine Integration Sessions in Miami",
+    "one-to-one-life-coaching": "Holistic Life Coaching in Miami",
+    "astrology-guidance": "Astrology Guidance in Miami"
+  };
+  const seoDescriptions: Record<string, string> = {
+    "tarot-readings":
+      "Book trauma-informed tarot readings in Miami with Adriana Monsalve for grounded insight, clarity, and next steps.",
+    "quantum-healing-sessions":
+      "Explore spiritual healing sessions in Miami that support energetic alignment, grounding, and renewal.",
+    "tat-therapy":
+      "Work with Adriana Monsalve for TAT therapy sessions in Miami that support regulation, processing, and gentle healing.",
+    "crystal-healing":
+      "Crystal healing sessions in Miami designed to support calm, energetic balance, and reflective healing work.",
+    "plant-medicine-sessions":
+      "Plant medicine integration support in Miami for grounding, reflection, and compassionate next-step guidance.",
+    "one-to-one-life-coaching":
+      "Holistic life coaching in Miami for clarity, personal growth, and aligned next steps.",
+    "astrology-guidance":
+      "Astrology guidance in Miami to help you understand timing, patterns, and supportive next steps with clarity."
+  };
 
   if (!service) {
     return (
       <div>
-        <SEO title={detailLabels.notFoundTitle} path="/services" />
+        <SEO title={detailLabels.notFoundTitle} path="/404" robots="noindex, nofollow" />
         <section className="section">
           <div className="container">
             <h1>{detailLabels.notFoundTitle}</h1>
@@ -84,7 +110,24 @@ const ServiceDetail = () => {
 
   return (
     <div>
-      <SEO title={service.title} description={service.shortDescription} path={`/services/${service.slug}`} />
+      <SEO
+        title={seoTitles[service.slug] ?? service.title}
+        description={seoDescriptions[service.slug] ?? service.shortDescription}
+        path={`/services/${service.slug}`}
+        schema={[
+          buildServiceSchema({
+            baseUrl: shared.baseUrl,
+            content,
+            path: `/services/${service.slug}`,
+            service
+          }),
+          buildBreadcrumbSchema(shared.baseUrl, [
+            { name: "Home", path: "/" },
+            { name: content.nav.services, path: "/services" },
+            { name: service.title, path: `/services/${service.slug}` }
+          ])
+        ]}
+      />
       <section className={`page-hero sacred-watermark ${motif?.className ?? ""}`}>
         <GeometryWatermark variant={motif?.variant ?? "flowerOfLife"} size={360} opacity={0.05} />
         <div className="container text-center">

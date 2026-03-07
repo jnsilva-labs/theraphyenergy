@@ -333,16 +333,17 @@ export const siteConfig: {
         home: {
           hero: {
             eyebrow: "Tarot / Healing / Coaching / Astrology",
-            title: "Sacred Alignment",
+            title: "Tarot Readings and Spiritual Healing in Miami",
             subtitle:
-              "Grounded, trauma-informed guidance for clarity, healing, and renewal - in Miami and worldwide.",
+              "Trauma-informed tarot readings, spiritual healing, and astrology guidance with Adriana Monsalve in Miami and remote worldwide.",
             ctaPrimary: "Book a Session",
             ctaSecondary: "Start Here (New Clients)",
             availabilityNote: "In-person in Miami + remote sessions worldwide"
           },
           services: {
             title: "Services",
-            subtitle: "Choose the modality that matches your intentions and needs."
+            subtitle:
+              "Explore tarot readings, spiritual healing, astrology guidance, and supportive sessions for Miami locals and remote clients."
           },
           startHere: {
             eyebrow: "New here?",
@@ -391,7 +392,7 @@ export const siteConfig: {
           heroEyebrow: "About",
           heroTitle: "Meet Adriana Monsalve",
           heroSubtitle:
-            "A grounded guide offering warm, trauma-informed sessions that center your agency and lived experience.",
+            "A Miami-based practitioner offering warm, trauma-informed tarot, spiritual healing, and astrology guidance that center your agency and lived experience.",
           storyTitle: "Adriana's story",
           storyBody:
             "Adriana's work blends intuition, embodied practices, and steady coaching to help clients feel clear and supported. Her approach is ethical, non-dogmatic, and rooted in respect for each person's autonomy.",
@@ -410,9 +411,9 @@ export const siteConfig: {
         },
         services: {
           heroEyebrow: "Services",
-          heroTitle: "Choose a modality that fits your intention.",
+          heroTitle: "Tarot, spiritual healing, and astrology services in Miami",
           heroSubtitle:
-            "Each offering is designed with a grounded, trauma-informed approach and can be tailored to your needs."
+            "Each offering is grounded, trauma-informed, and available in Miami with remote support worldwide."
         },
         serviceDetail: {
           heroEyebrow: "Service",
@@ -858,16 +859,17 @@ export const siteConfig: {
         home: {
           hero: {
             eyebrow: "Tarot / Sanación / Coaching / Astrología",
-            title: "Alineación Sagrada",
+            title: "Lecturas de tarot y sanación espiritual en Miami",
             subtitle:
-              "Guía cercana y con enfoque trauma-informado para claridad, sanación y renovación - en Miami y a distancia.",
+              "Lecturas de tarot, sanación espiritual y guía astrológica con enfoque trauma-informado en Miami y a distancia.",
             ctaPrimary: "Reserva una sesión",
             ctaSecondary: "Empieza aquí (nuevas personas)",
             availabilityNote: "Presencial en Miami + sesiones remotas en todo el mundo"
           },
           services: {
             title: "Servicios",
-            subtitle: "Elige la modalidad que se alinea con tus necesidades e intención."
+            subtitle:
+              "Explora lecturas de tarot, sanación espiritual, guía astrológica y sesiones de apoyo para personas en Miami y a distancia."
           },
           startHere: {
             eyebrow: "¿Primera vez?",
@@ -916,7 +918,7 @@ export const siteConfig: {
           heroEyebrow: "Sobre mí",
           heroTitle: "Conoce a Adriana Monsalve",
           heroSubtitle:
-            "Una guía aterrizada que ofrece sesiones cálidas y con enfoque trauma-informado, centradas en tu experiencia y autonomía.",
+            "Una practicante en Miami que ofrece tarot, sanación espiritual y guía astrológica con enfoque trauma-informado, centradas en tu experiencia y autonomía.",
           storyTitle: "La historia de Adriana",
           storyBody:
             "El trabajo de Adriana integra intuición, prácticas somáticas y coaching para ayudarte a sentir claridad y apoyo. Su enfoque es ético, no dogmático y basado en el respeto a cada persona.",
@@ -935,9 +937,9 @@ export const siteConfig: {
         },
         services: {
           heroEyebrow: "Servicios",
-          heroTitle: "Elige una modalidad que se alinee con tu intención.",
+          heroTitle: "Servicios de tarot, sanación espiritual y astrología en Miami",
           heroSubtitle:
-            "Cada propuesta está diseñada con un enfoque trauma-informado y puede adaptarse a tus necesidades."
+            "Cada propuesta está diseñada con un enfoque trauma-informado y está disponible en Miami con acompañamiento remoto."
         },
         serviceDetail: {
           heroEyebrow: "Servicio",

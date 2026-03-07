@@ -1,21 +1,20 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import { HelmetProvider } from "react-helmet-async";
-import { I18nextProvider } from "react-i18next";
 import App from "./App";
-import i18n from "./lib/i18n";
+import AppShell from "./AppShell";
+import { createAppI18n } from "./lib/i18n";
 import "./styles/theme.css";
 import "./styles/global.css";
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+const i18n = createAppI18n();
+
+ReactDOM.hydrateRoot(document.getElementById("root")!,
   <React.StrictMode>
-    <HelmetProvider>
-      <I18nextProvider i18n={i18n}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </I18nextProvider>
-    </HelmetProvider>
+    <AppShell i18n={i18n}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </AppShell>
   </React.StrictMode>
 );

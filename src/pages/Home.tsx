@@ -11,6 +11,7 @@ import GeometryWatermark from "../components/GeometryWatermark";
 import StaggerGroup from "../components/StaggerGroup";
 import useSiteContent from "../lib/useSiteContent";
 import { isValidEmail, submitForm } from "../lib/forms";
+import { buildProfessionalServiceSchema } from "../lib/seo";
 import {
   FloatingAccent,
   FooterGeometry,
@@ -21,7 +22,7 @@ import {
 import aboutPhoto from "../assets/inspo/about.jpg";
 
 const Home = () => {
-  const { content, locale } = useSiteContent();
+  const { content, locale, shared } = useSiteContent();
   const home = content.pages.home;
   const faqTeaser = content.faqs.slice(0, 4);
   const servicePalette = [
@@ -72,7 +73,16 @@ const Home = () => {
 
   return (
     <div>
-      <SEO title={home.hero.title} path="/" />
+      <SEO
+        title="Tarot Readings & Spiritual Healing in Miami"
+        description="Trauma-informed tarot readings, spiritual healing, and astrology guidance with Adriana Monsalve in Miami and remote worldwide."
+        path="/"
+        schema={buildProfessionalServiceSchema({
+          baseUrl: shared.baseUrl,
+          contact: shared.contact,
+          content
+        })}
+      />
 
       <section className="hero sacred-watermark">
         <GeometryHeader />

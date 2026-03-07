@@ -6,16 +6,26 @@ import SacredGeometryMark from "../components/SacredGeometryMark";
 import ParallaxAccent from "../components/ParallaxAccent";
 import { GeometryHeader } from "../components/VariantGeometry";
 import useSiteContent from "../lib/useSiteContent";
+import { buildProfessionalServiceSchema } from "../lib/seo";
 import portrait from "../assets/inspo/about.jpg";
 import floralCanopy from "../assets/inspo/floralcanopy.jpg";
 
 const About = () => {
-  const { content } = useSiteContent();
+  const { content, shared } = useSiteContent();
   const about = content.pages.about;
 
   return (
     <div>
-      <SEO title={content.nav.about} path="/about" />
+      <SEO
+        title="About Adriana Monsalve"
+        description="Meet Adriana Monsalve, a Miami-based practitioner offering trauma-informed tarot, spiritual healing, and astrology guidance."
+        path="/about"
+        schema={buildProfessionalServiceSchema({
+          baseUrl: shared.baseUrl,
+          contact: shared.contact,
+          content
+        })}
+      />
       <section className="page-hero sacred-watermark">
         <GeometryWatermark variant="flowerOfLife" size={360} opacity={0.05} />
         <ParallaxAccent className="parallax-accent" style={{ top: "20%", left: "6%" }}>

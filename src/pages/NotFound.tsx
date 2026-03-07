@@ -4,7 +4,7 @@ import SEO from "../components/SEO";
 const NotFound = () => {
   return (
     <div>
-      <SEO title="Page not found" path="/404" />
+      <SEO title="Page not found" path="/404" robots="noindex, nofollow" />
       <section className="section">
         <div className="container">
           <h1>Page not found</h1>
