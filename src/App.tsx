@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -12,19 +13,22 @@ import NotFound from "./pages/NotFound";
 
 const App = () => {
   return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/services/:slug" element={<ServiceDetail />} />
-        <Route path="/booking" element={<Booking />} />
-        <Route path="/testimonials" element={<Testimonials />} />
-        <Route path="/faq" element={<FAQ />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="*" element={<NotFound />} />
-      </Route>
-    </Routes>
+    <>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/services/:slug" element={<ServiceDetail />} />
+          <Route path="/booking" element={<Booking />} />
+          <Route path="/testimonials" element={<Testimonials />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+      <Analytics />
+    </>
   );
 };
 
