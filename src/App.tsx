@@ -1,4 +1,5 @@
 import { Route, Routes, useParams } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -21,22 +22,25 @@ const LocalizedLayout = () => {
 
 const App = () => {
   return (
-    <Routes>
-      <Route path="/:language?" element={<LocalizedLayout />}>
-        <Route index element={<Home />} />
-        <Route path="about" element={<About />} />
-        <Route path="services" element={<Services />} />
-        <Route path="services/:slug" element={<ServiceDetail />} />
-        <Route path="booking" element={<Booking />} />
-        <Route path="testimonials" element={<Testimonials />} />
-        <Route path="faq" element={<FAQ />} />
-        <Route path="contact" element={<Contact />} />
-        <Route path="prepare/:slug" element={<Preparation />} />
-        <Route path="resources" element={<Resources />} />
-        <Route path="resources/:slug" element={<ResourceDetail />} />
-        <Route path="*" element={<NotFound />} />
-      </Route>
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/:language?" element={<LocalizedLayout />}>
+          <Route index element={<Home />} />
+          <Route path="about" element={<About />} />
+          <Route path="services" element={<Services />} />
+          <Route path="services/:slug" element={<ServiceDetail />} />
+          <Route path="booking" element={<Booking />} />
+          <Route path="testimonials" element={<Testimonials />} />
+          <Route path="faq" element={<FAQ />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="prepare/:slug" element={<Preparation />} />
+          <Route path="resources" element={<Resources />} />
+          <Route path="resources/:slug" element={<ResourceDetail />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+      <Analytics />
+    </>
   );
 };
 
