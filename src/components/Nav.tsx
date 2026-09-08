@@ -1,124 +1,22 @@
-import { NavLink, Link, NavLinkProps, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import Link from "./LocalizedLink";
 import LanguageToggle from "./LanguageToggle";
-import SacredGeometryMark from "./SacredGeometryMark";
 import useSiteContent from "../lib/useSiteContent";
-
-const Nav = () => {
-  const { content } = useSiteContent();
-  const navLinkClass: NavLinkProps["className"] = ({ isActive }) =>
-    isActive ? "active" : undefined;
-  const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation();
-
-  useEffect(() => {
-    setIsOpen(false);
-  }, [location.pathname]);
-
-  useEffect(() => {
-    document.body.classList.toggle("menu-open", isOpen);
-    return () => document.body.classList.remove("menu-open");
-  }, [isOpen]);
-
-  return (
-    <header className="nav">
-      <div className="container nav-inner">
-        <Link to="/" className="brand" aria-label={content.labels.home}>
-          <span className="brand-title">{content.practitioner.name}</span>
-          <span className="brand-subtitle">{content.practitioner.title}</span>
-        </Link>
-        <nav className="nav-links" aria-label={content.labels.mainNav}>
-          <NavLink to="/about" className={navLinkClass}>
-            {content.nav.about}
-          </NavLink>
-          <NavLink to="/services" className={navLinkClass}>
-            {content.nav.services}
-          </NavLink>
-          <NavLink to="/testimonials" className={navLinkClass}>
-            {content.nav.testimonials}
-          </NavLink>
-          <NavLink to="/faq" className={navLinkClass}>
-            {content.nav.faq}
-          </NavLink>
-          <NavLink to="/booking" className={navLinkClass}>
-            {content.nav.booking}
-          </NavLink>
-          <NavLink to="/contact" className={navLinkClass}>
-            {content.nav.contact}
-          </NavLink>
-        </nav>
-        <div className="nav-cta">
-          <LanguageToggle />
-          <a href="/#start-here" className="button button-ghost">
-            {content.nav.startHere}
-          </a>
-          <NavLink to="/booking" className="button button-primary">
-            {content.nav.bookSession}
-          </NavLink>
-        </div>
-        <button
-          type="button"
-          className="nav-toggle"
-          aria-label={isOpen ? "Close menu" : "Open menu"}
-          aria-expanded={isOpen}
-          aria-controls="mobile-nav"
-          onClick={() => setIsOpen((prev) => !prev)}
-          data-open={isOpen ? "true" : "false"}
-        >
-          <SacredGeometryMark
-            variant="flowerOfLife"
-            size={30}
-            opacity={0.9}
-            className={isOpen ? "geometry-rotate" : ""}
-          />
-        </button>
-      </div>
-      <div
-        id="mobile-nav"
-        className={`nav-panel ${isOpen ? "open" : ""}`}
-        aria-hidden={!isOpen}
-        hidden={!isOpen}
-      >
-        <div className="container nav-panel-inner">
-          <NavLink to="/about" className={navLinkClass} onClick={() => setIsOpen(false)}>
-            {content.nav.about}
-          </NavLink>
-          <NavLink to="/services" className={navLinkClass} onClick={() => setIsOpen(false)}>
-            {content.nav.services}
-          </NavLink>
-          <NavLink to="/testimonials" className={navLinkClass} onClick={() => setIsOpen(false)}>
-            {content.nav.testimonials}
-          </NavLink>
-          <NavLink to="/faq" className={navLinkClass} onClick={() => setIsOpen(false)}>
-            {content.nav.faq}
-          </NavLink>
-          <NavLink to="/booking" className={navLinkClass} onClick={() => setIsOpen(false)}>
-            {content.nav.booking}
-          </NavLink>
-          <NavLink to="/contact" className={navLinkClass} onClick={() => setIsOpen(false)}>
-            {content.nav.contact}
-          </NavLink>
-          <div className="nav-panel-cta">
-            <LanguageToggle />
-            <a
-              href="/#start-here"
-              className="button button-ghost"
-              onClick={() => setIsOpen(false)}
-            >
-              {content.nav.startHere}
-            </a>
-            <NavLink
-              to="/booking"
-              className="button button-primary"
-              onClick={() => setIsOpen(false)}
-            >
-              {content.nav.bookSession}
-            </NavLink>
-          </div>
-        </div>
-      </div>
-    </header>
-  );
-};
-
-export default Nav;
+import { withoutLocale } from "../lib/routing";
+export default function Nav() {
+    const { content, locale } = useSiteContent();
+    const es = locale === "es";
+    const location = useLocation();
+    const [isOpen, setIsOpen] = useState(false);
+    const toggle = useRef<HTMLButtonElement>(null);
+    const items = [["/about", content.nav.about], ["/services", content.nav.services], ["/resources", es ? "Guías" : "Guides"], ["/contact", content.nav.contact]];
+    useEffect(() => setIsOpen(false), [location.pathname, location.hash]);
+    useEffect(() => { if (!isOpen)
+        return; const escape = (e: KeyboardEvent) => { if (e.key === "Escape") {
+        setIsOpen(false);
+        toggle.current?.focus();
+    } }; document.addEventListener("keydown", escape); return () => document.removeEventListener("keydown", escape); }, [isOpen]);
+    const links = items.map(([path, label]) => <Link key={path} to={path} aria-current={withoutLocale(location.pathname).startsWith(path) ? "page" : undefined} onClick={() => setIsOpen(false)}>{label}</Link>);
+    return <header className="nav"><div className="container nav-inner"><Link to="/" className="brand" aria-label={content.labels.home}><span className="brand-title">{content.practitioner.name}</span><span className="brand-subtitle">{content.practitioner.title}</span></Link><nav className="nav-links" aria-label={content.labels.mainNav}>{links}</nav><div className="nav-cta"><LanguageToggle /><Link to="/booking" className="button button-primary">{es ? "Solicitar sesión" : "Request a session"} ↗</Link></div><button ref={toggle} type="button" className="nav-toggle" aria-expanded={isOpen} aria-controls="mobile-nav" aria-label={isOpen ? (es ? "Cerrar menú" : "Close menu") : (es ? "Abrir menú" : "Open menu")} onClick={() => setIsOpen(v => !v)}><span aria-hidden="true">{isOpen ? "×" : "☰"}</span></button></div><nav id="mobile-nav" className={`nav-panel ${isOpen ? "open" : ""}`} hidden={!isOpen} aria-label={es ? "Navegación móvil" : "Mobile navigation"}><div className="container nav-panel-inner">{links}<Link to="/faq">{content.nav.faq}</Link><Link to="/testimonials">{content.nav.testimonials}</Link><LanguageToggle /><Link to="/#start-here" className="text-link">{es ? "Ayúdame a elegir" : "Help me choose"} ↓</Link><Link to="/booking" className="button button-primary">{es ? "Solicitar sesión" : "Request a session"} ↗</Link></div></nav></header>;
+}

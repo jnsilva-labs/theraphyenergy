@@ -49,7 +49,8 @@ export const buildProfessionalServiceSchema = ({
       addressRegion: "FL",
       addressCountry: "US"
     },
-    sameAs: [contact.instagram],
+    ...(contact.instagram && !contact.instagram.includes("yourhandle")
+      ? { sameAs: [contact.instagram] } : {}),
     serviceType: ["Tarot readings", "Spiritual healing", "Astrology guidance"]
   };
 };

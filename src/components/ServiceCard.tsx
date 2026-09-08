@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Link from "./LocalizedLink";
 import type { Service } from "../content/siteConfig";
 import SacredGeometryMark from "./SacredGeometryMark";
 import useSiteContent from "../lib/useSiteContent";
@@ -47,7 +47,7 @@ const ServiceCard = ({ service }: { service: Service }) => {
         <Link to={`/services/${service.slug}`} className="text-link">
           {content.labels.learnMore}
         </Link>
-        <Link to="/booking" className="button button-ghost">
+        <Link to={`/booking?service=${service.slug}`} className="button button-ghost">
           {content.labels.book}
         </Link>
       </div>

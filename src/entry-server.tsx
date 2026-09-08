@@ -3,7 +3,7 @@ import { StaticRouter } from "react-router-dom/server";
 import App from "./App";
 import AppShell from "./AppShell";
 import { siteConfig } from "./content/siteConfig";
-import type { Locale } from "./content/siteConfig";
+import { localeFromPath, localizePath } from "./lib/routing";
 import { createAppI18n } from "./lib/i18n";
 
 type RouteDefinition = {
@@ -17,11 +17,14 @@ const serviceRoutes = siteConfig.locales.en.services.map((service) => ({
   priority: 0.8
 }));
 
-export const prerenderRoutes: RouteDefinition[] = [
+const englishRoutes: RouteDefinition[] = [
   { path: "/", priority: 1 },
   { path: "/about", priority: 0.8 },
   { path: "/services", priority: 0.9 },
   ...serviceRoutes,
+  ...siteConfig.locales.en.services.map((service) => ({ path: `/prepare/${service.slug}`, priority: 0.6 })),
+  { path: "/resources", priority: 0.7 },
+  ...["first-session", "remote-session", "reflection-prompts"].map((slug) => ({ path: `/resources/${slug}`, priority: 0.6 })),
   { path: "/booking", priority: 0.9 },
   { path: "/testimonials", priority: 0.7 },
   { path: "/faq", priority: 0.7 },
@@ -29,7 +32,14 @@ export const prerenderRoutes: RouteDefinition[] = [
   { path: "/404", indexable: false }
 ];
 
-export const render = (url: string, locale: Locale = "en") => {
+export const prerenderRoutes: RouteDefinition[] = [
+  ...englishRoutes,
+  ...englishRoutes.map((route) => ({ ...route, path: localizePath(route.path, "es") }))
+];
+export const baseUrl = siteConfig.shared.baseUrl;
+
+export const render = (url: string) => {
+  const locale = localeFromPath(url);
   const helmetContext: Record<string, unknown> = {};
   const i18n = createAppI18n(locale);
   const appHtml = renderToString(

@@ -1,7 +1,7 @@
 import { createInstance } from "i18next";
 import { initReactI18next } from "react-i18next";
 import type { Locale } from "../content/siteConfig";
-import { getStoredLocale, normalizeLocale, persistLocale } from "./locale";
+import { localeFromPath } from "./routing";
 
 export const resources = {
   en: {
@@ -20,23 +20,8 @@ export const resources = {
   }
 } as const;
 
-const detectInitialLocale = (): Locale => {
-  if (typeof document !== "undefined") {
-    const htmlLang = document.documentElement.lang;
-    if (htmlLang) {
-      return normalizeLocale(htmlLang);
-    }
-  }
-
-  const stored = getStoredLocale();
-  if (stored) return stored;
-
-  if (typeof window !== "undefined") {
-    return normalizeLocale(window.navigator.language);
-  }
-
-  return "en";
-};
+const detectInitialLocale = (): Locale =>
+  typeof window !== "undefined" ? localeFromPath(window.location.pathname) : "en";
 
 export const createAppI18n = (locale: Locale = detectInitialLocale()) => {
   const i18n = createInstance();
@@ -47,12 +32,6 @@ export const createAppI18n = (locale: Locale = detectInitialLocale()) => {
     fallbackLng: "en",
     interpolation: { escapeValue: false }
   });
-
-  if (typeof window !== "undefined") {
-    i18n.on("languageChanged", (language) => {
-      persistLocale(normalizeLocale(language));
-    });
-  }
 
   return i18n;
 };

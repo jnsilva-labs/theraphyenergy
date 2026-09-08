@@ -47,12 +47,15 @@ const parseBody = (body: unknown): Record<string, unknown> => {
   if (!body) return {};
   if (typeof body === "string") {
     try {
-      return JSON.parse(body) as Record<string, unknown>;
+      const parsed: unknown = JSON.parse(body);
+      return parsed && typeof parsed === "object" && !Array.isArray(parsed)
+        ? parsed as Record<string, unknown>
+        : {};
     } catch {
       return {};
     }
   }
-  if (typeof body === "object") {
+  if (typeof body === "object" && !Array.isArray(body)) {
     return body as Record<string, unknown>;
   }
   return {};
@@ -207,29 +210,38 @@ export default async function handler(req: RequestLike, res: ResponseLike) {
 
   const email = buildEmail(submission);
 
-  const resendResponse = await fetch(RESEND_API_URL, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      from,
-      to: [to],
-      subject: email.subject,
-      text: email.text,
-      reply_to: email.replyTo
-    })
-  });
+  let resendResponse: Response;
+  try {
+    resendResponse = await fetch(RESEND_API_URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        from,
+        to: [to],
+        subject: email.subject,
+        text: email.text,
+        reply_to: email.replyTo
+      })
+    });
+
+  } catch {
+    res.status(502).json({
+      message: submission.locale === "es"
+        ? "No pudimos enviar tu mensaje en este momento."
+        : "We couldn't deliver your submission right now."
+    });
+    return;
+  }
 
   if (!resendResponse.ok) {
-    const errorText = await resendResponse.text();
     res.status(502).json({
       message:
         submission.locale === "es"
           ? "No pudimos enviar tu mensaje en este momento."
-          : "We couldn't deliver your submission right now.",
-      details: errorText
+          : "We couldn't deliver your submission right now."
     });
     return;
   }

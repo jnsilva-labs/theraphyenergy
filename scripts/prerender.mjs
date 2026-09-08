@@ -9,7 +9,7 @@ const serverDir = path.join(distDir, "server");
 const templatePath = path.join(distDir, "index.html");
 const entryServerPath = path.join(serverDir, "entry-server.js");
 
-const { prerenderRoutes, render } = await import(pathToFileURL(entryServerPath).href);
+const { prerenderRoutes, render, baseUrl } = await import(pathToFileURL(entryServerPath).href);
 const template = await readFile(templatePath, "utf8");
 
 const injectPage = (result) => {
@@ -44,17 +44,21 @@ const lastmod = new Date().toISOString().slice(0, 10);
 const urls = prerenderRoutes
   .filter((route) => route.indexable !== false)
   .map((route) => {
-    const loc = route.path === "/" ? "https://www.theraphyenergy.com/" : `https://www.theraphyenergy.com${route.path}`;
+    const loc = `${baseUrl}${route.path}`;
+    const englishPath = route.path.replace(/^\/es(?=\/|$)/, "") || "/";
+    const spanishPath = `/es${englishPath === "/" ? "" : englishPath}`;
+    const alternates = [["en", englishPath], ["es", spanishPath], ["x-default", englishPath]]
+      .map(([language, routePath]) => `\n    <xhtml:link rel="alternate" hreflang="${language}" href="${baseUrl}${routePath}" />`).join("");
     const priority =
       typeof route.priority === "number"
         ? `\n    <priority>${route.priority.toFixed(1)}</priority>`
         : "";
 
-    return `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${lastmod}</lastmod>${priority}\n  </url>`;
+    return `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${lastmod}</lastmod>${alternates}${priority}\n  </url>`;
   })
   .join("\n");
 
-const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls}\n</urlset>\n`;
 
 await writeFile(path.join(distDir, "sitemap.xml"), sitemap, "utf8");
 await rm(serverDir, { recursive: true, force: true });

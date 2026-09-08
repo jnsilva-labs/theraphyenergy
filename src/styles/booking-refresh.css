@@ -1,0 +1,33 @@
+.booking-intro { padding: clamp(2rem, 5vw, 4rem) 0 1.6rem; }
+.booking-intro h1 { font-size: clamp(2.4rem, 5vw, 4rem); margin: .5rem 0 1rem; }
+.booking-intro p { max-width: 650px; }
+.booking-intro .booking-response { font-size: .9rem; margin-top: .8rem; color: var(--text-muted); }
+.booking-body { padding: 0 0 5rem; }
+.booking-layout { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(250px, 1fr); align-items: start; gap: 2rem; }
+.booking-form-card { padding: clamp(1.25rem, 4vw, 2.5rem); }
+.booking-form-card h2 { margin-top: 0; }
+.booking-selection { padding: 1rem; border-left: 3px solid var(--accent-green); background: rgba(143, 160, 132, .08); display: grid; gap: .3rem; font-size: .9rem; }
+.booking-selection p { margin: 0; }
+.booking-field-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.booking-required, .booking-page .field small { font-size: .82rem; line-height: 1.6; }
+.booking-page .form input, .booking-page .form select, .booking-page .form textarea { font-size: 1rem; }
+.booking-optional { border-top: 1px solid var(--border-color, #d9d4cb); border-bottom: 1px solid var(--border-color, #d9d4cb); padding: 1rem 0; }
+.booking-optional summary { cursor: pointer; font-weight: 600; min-height: 28px; }
+.booking-optional[open] summary { margin-bottom: 1rem; }
+.booking-optional .field + .field { margin-top: 1rem; }
+.booking-error-summary { padding: .8rem 1rem; border-left: 3px solid #9a4237; background: #faeeea; }
+.booking-next-steps { padding-left: 1.3rem; display: grid; gap: 1.3rem; }
+.booking-next-steps li { padding-left: .35rem; }
+.booking-help { padding: 1.5rem; }
+.booking-help .text-link { display: block; margin-top: 1rem; }
+.booking-page [aria-invalid="true"], .contact-section [aria-invalid="true"] { border-color: #9a4237; }
+.service-practical { margin-top: 2rem; text-align: left; }
+.service-preparation { margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; padding: 1.5rem; background: rgba(143, 160, 132, .09); border-radius: 12px; }
+.service-preparation h3 { margin-top: 0; }
+.service-preparation p { margin-bottom: 0; }
+.service-breadcrumbs { font-size: .85rem; padding-top: 1.5rem; display: flex; gap: .5rem; flex-wrap: wrap; }
+@media (max-width: 760px) { .booking-layout { grid-template-columns: 1fr; gap: 1rem; } .booking-field-pair { grid-template-columns: 1fr; } .booking-intro { padding-top: 1.8rem; } .booking-intro h1 { font-size: 2.45rem; } .booking-aside .card { padding: 1.5rem; } .service-preparation { align-items: flex-start; flex-direction: column; } }
+
+.booking-calendar { margin-bottom: 1.5rem; }
+.booking-calendar p { margin-bottom: 1rem; }
+.booking-calendar small { display: block; margin-top: .8rem; }

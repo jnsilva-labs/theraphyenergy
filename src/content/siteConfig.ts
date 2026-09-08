@@ -61,7 +61,7 @@ export type Tag = {
   label: string;
 };
 
-type LocaleContent = {
+export type LocaleContent = {
   meta: {
     baseTitle: string;
     defaultDescription: string;

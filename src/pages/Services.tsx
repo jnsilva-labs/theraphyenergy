@@ -85,6 +85,7 @@ const Services = () => {
                   key={tag.id}
                   type="button"
                   className={`filter-chip ${activeTag === tag.label ? "active" : ""}`}
+                  aria-pressed={activeTag === tag.label}
                   onClick={() => setActiveTag(tag.label)}
                 >
                   {tag.label}

@@ -1,10 +1,10 @@
-import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
 import { siteConfig } from "../content/siteConfig";
-import { normalizeLocale } from "./locale";
+import { localeFromPath } from "./routing";
 
 const useSiteContent = () => {
-  const { i18n } = useTranslation();
-  const locale = normalizeLocale(i18n.language);
+  const { pathname } = useLocation();
+  const locale = localeFromPath(pathname);
 
   return {
     locale,

@@ -53,7 +53,7 @@ export const submitForm = async (payload: FormSubmission) => {
     result = null;
   }
 
-  if (!response.ok) {
+  if (!response.ok || result?.ok !== true) {
     throw new Error(result?.message || "Unable to submit form right now.");
   }
 

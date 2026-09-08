@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Link from "./LocalizedLink";
 import GeometryWatermark from "./GeometryWatermark";
 import useSiteContent from "../lib/useSiteContent";
 

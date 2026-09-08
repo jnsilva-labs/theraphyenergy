@@ -1,4 +1,6 @@
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import Link from "../components/LocalizedLink";
+import "../styles/booking-refresh.css";
 import SEO from "../components/SEO";
 import FadeIn from "../components/FadeIn";
 import ServiceDetailSections from "../components/ServiceDetailSections";
@@ -54,7 +56,7 @@ const motifMap: Record<
 
 const ServiceDetail = () => {
   const { slug } = useParams();
-  const { content, shared } = useSiteContent();
+  const { content, shared, locale } = useSiteContent();
   const service = slug
     ? content.services.find((item) => item.slug === slug)
     : undefined;
@@ -106,13 +108,14 @@ const ServiceDetail = () => {
   const motif = motifMap[service.slug];
   const related = content.services
     .filter((item) => item.slug !== service.slug)
+    .sort((a, b) => b.tags.filter((tag) => service.tags.includes(tag)).length - a.tags.filter((tag) => service.tags.includes(tag)).length)
     .slice(0, 3);
 
   return (
     <div>
       <SEO
-        title={seoTitles[service.slug] ?? service.title}
-        description={seoDescriptions[service.slug] ?? service.shortDescription}
+        title={locale === "es" ? `${service.title} en Miami y a distancia` : seoTitles[service.slug] ?? service.title}
+        description={locale === "es" ? service.shortDescription : seoDescriptions[service.slug] ?? service.shortDescription}
         path={`/services/${service.slug}`}
         schema={[
           buildServiceSchema({
@@ -128,6 +131,9 @@ const ServiceDetail = () => {
           ])
         ]}
       />
+      <nav className="container service-breadcrumbs" aria-label={locale === "es" ? "Ruta de navegación" : "Breadcrumb"}>
+        <Link to="/">{locale === "es" ? "Inicio" : "Home"}</Link><span aria-hidden="true">/</span><Link to="/services">{content.nav.services}</Link><span aria-hidden="true">/</span><span aria-current="page">{service.title}</span>
+      </nav>
       <section className={`page-hero sacred-watermark ${motif?.className ?? ""}`}>
         <GeometryWatermark variant={motif?.variant ?? "flowerOfLife"} size={360} opacity={0.05} />
         <div className="container text-center">
@@ -137,7 +143,7 @@ const ServiceDetail = () => {
             <h1>{service.title}</h1>
             <p className="hero-subtext">{service.shortDescription}</p>
             <div className="hero-actions justify-center">
-              <Link to="/booking" className="button button-primary">
+              <Link to={`/booking?service=${service.slug}`} className="button button-primary">
                 {service.ctaPrimary}
               </Link>
               <Link to="/contact" className="button button-ghost">
@@ -155,18 +161,6 @@ const ServiceDetail = () => {
 
       <section className="section">
         <div className="container">
-          <div className="service-detail-main">
-            <div className="service-detail-text">
-              <ServiceDetailSections service={service} />
-            </div>
-            {serviceImage && (
-              <FadeIn>
-                <div className="service-detail-media">
-                  <img src={serviceImage} alt={`${service.title} session`} loading="lazy" />
-                </div>
-              </FadeIn>
-            )}
-          </div>
           <FadeIn>
             <div className="service-details-grid">
               <div className="detail-card">
@@ -183,6 +177,22 @@ const ServiceDetail = () => {
               </div>
             </div>
           </FadeIn>
+          <div className="service-detail-main">
+            <div className="service-detail-text">
+              <ServiceDetailSections service={service} />
+            </div>
+            {serviceImage && (
+              <FadeIn>
+                <div className="service-detail-media">
+                  <img src={serviceImage} alt={`${service.title} session`} loading="lazy" />
+                </div>
+              </FadeIn>
+            )}
+          </div>
+          <div className="service-preparation">
+            <div><h3>{locale === "es" ? "Llega con tranquilidad" : "Arrive feeling prepared"}</h3><p>{locale === "es" ? "Qué preparar, qué preguntar y cómo organizar tu espacio." : "What to bring, what to ask, and how to set up your space."}</p></div>
+            <Link to={`/prepare/${service.slug}`} className="button button-ghost">{locale === "es" ? "Guía de preparación" : "Your preparation guide"}</Link>
+          </div>
           <FadeIn>
             <div className="disclaimer-block safety-callout">
               <div className="safety-header">
@@ -229,7 +239,7 @@ const ServiceDetail = () => {
             ))}
           </StaggerGroup>
           <div className="section-cta">
-            <Link to="/booking" className="button button-primary">
+            <Link to={`/booking?service=${service.slug}`} className="button button-primary">
               {detailLabels.relatedCta}
             </Link>
           </div>

@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useRef, useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import SEO from "../components/SEO";
 import FadeIn from "../components/FadeIn";
 import GeometryWatermark from "../components/GeometryWatermark";
@@ -20,6 +20,8 @@ const Contact = () => {
       ? "No pudimos enviar tu mensaje ahora mismo. Inténtalo de nuevo en unos minutos."
       : "We couldn't send your message right now. Please try again in a few minutes.";
 
+  const formRef = useRef<HTMLFormElement>(null);
+  const successRef = useRef<HTMLDivElement>(null);
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -30,15 +32,19 @@ const Contact = () => {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  useEffect(() => { if (submitted) successRef.current?.focus(); }, [submitted]);
+
   const handleChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => { const next = { ...prev }; delete next[name]; return next; });
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isSubmitting) return;
     const nextErrors: Record<string, string> = {};
     if (!formData.name.trim()) nextErrors.name = formCopy.errors.name;
     if (!isValidEmail(formData.email)) nextErrors.email = formCopy.errors.email;
@@ -46,6 +52,7 @@ const Contact = () => {
 
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) {
+      requestAnimationFrame(() => formRef.current?.querySelector<HTMLElement>(`[name="${Object.keys(nextErrors)[0]}"]`)?.focus());
       return;
     }
 
@@ -61,10 +68,8 @@ const Contact = () => {
         message: formData.message.trim()
       });
       setSubmitted(true);
-    } catch (error) {
-      setSubmitError(
-        error instanceof Error && error.message ? error.message : submitErrorMessage
-      );
+    } catch {
+      setSubmitError(submitErrorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -73,8 +78,8 @@ const Contact = () => {
   return (
     <div>
       <SEO
-        title="Contact Adriana Monsalve"
-        description="Get in touch for tarot readings, spiritual healing, and astrology guidance in Miami or remote worldwide."
+        title={locale === "es" ? "Contacta con Adriana Monsalve" : "Contact Adriana Monsalve"}
+        description={locale === "es" ? "Contacta con Adriana para sesiones en Miami o a distancia. Comparte tus preguntas y recibe orientación sobre los próximos pasos." : "Get in touch for tarot readings, spiritual healing, and astrology guidance in Miami or remote worldwide."}
         path="/contact"
         schema={buildProfessionalServiceSchema({
           baseUrl: shared.baseUrl,
@@ -114,28 +119,34 @@ const Contact = () => {
             <div className="card">
               <h2>{page.formTitle}</h2>
               {submitted ? (
-                <div className="success-message" aria-live="polite">
+                <div ref={successRef} tabIndex={-1} className="success-message" role="status">
                   <h3>{page.successTitle}</h3>
                   <p>{page.successBody}</p>
                 </div>
               ) : (
-                <form className="form" onSubmit={handleSubmit} noValidate>
+                <form ref={formRef} className="form" onSubmit={handleSubmit} noValidate aria-busy={isSubmitting}>
+                  {Object.keys(errors).length > 0 && <p role="alert" className="error">{locale === "es" ? "Revisa los campos señalados antes de enviar." : "Please check the highlighted fields before sending."}</p>}
                   <div className="field">
                     <label htmlFor="name">{formCopy.fields.name}</label>
                     <input
                       id="name"
+                      aria-invalid={Boolean(errors.name)}
+                      aria-describedby={errors.name ? "name-error" : undefined}
                       name="name"
+                      autoComplete="name"
                       type="text"
                       value={formData.name}
                       onChange={handleChange}
                       required
                     />
-                    {errors.name && <span className="error">{errors.name}</span>}
+                    {errors.name && <span id="name-error" className="error">{errors.name}</span>}
                   </div>
                   <div className="field">
                     <label htmlFor="email">{formCopy.fields.email}</label>
                     <input
                       id="email"
+                      aria-invalid={Boolean(errors.email)}
+                      aria-describedby={errors.email ? "email-error" : undefined}
                       name="email"
                       type="email"
                       value={formData.email}
@@ -143,12 +154,14 @@ const Contact = () => {
                       autoComplete="email"
                       required
                     />
-                    {errors.email && <span className="error">{errors.email}</span>}
+                    {errors.email && <span id="email-error" className="error">{errors.email}</span>}
                   </div>
                   <div className="field">
                     <label htmlFor="message">{formCopy.fields.message}</label>
                     <textarea
                       id="message"
+                      aria-invalid={Boolean(errors.message)}
+                      aria-describedby={errors.message ? "message-error" : undefined}
                       name="message"
                       rows={5}
                       placeholder={formCopy.placeholders.message}
@@ -157,10 +170,10 @@ const Contact = () => {
                       required
                     />
                     {errors.message && (
-                      <span className="error">{errors.message}</span>
+                      <span id="message-error" className="error">{errors.message}</span>
                     )}
                   </div>
-                  {submitError && <p className="error">{submitError}</p>}
+                  {submitError && <p role="alert" className="error">{submitError}</p>}
                   <button
                     className="button button-primary"
                     type="submit"
@@ -188,15 +201,7 @@ const Contact = () => {
                 {content.labels.email}:{" "}
                 <a href={`mailto:${shared.contact.email}`}>{shared.contact.email}</a>
               </p>
-              <p>
-                {content.labels.instagram}:{" "}
-                <a href={shared.contact.instagram} target="_blank" rel="noreferrer">
-                  {shared.instagramHandle}
-                </a>
-              </p>
-              <div className="map-placeholder" aria-hidden="true">
-                {page.mapPlaceholder}
-              </div>
+
             </div>
           </FadeIn>
         </div>
